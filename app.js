@@ -9,6 +9,7 @@ var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const uploadRouter = require('./routes/uploadRouter');
 
 var passport = require('passport');
 var authenticate = require('./authenticate');
@@ -47,5 +48,6 @@ app.use('/users', usersRouter);
 app.use('/dishes',dishRouter);
 app.use('/promotions',promoRouter);
 app.use('/leaders',leaderRouter);
+app.use('/imageUpload', uploadRouter);
 
 module.exports = app;
