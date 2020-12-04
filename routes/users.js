@@ -6,10 +6,15 @@ const bodyParser = require('body-parser');
 var User = require('../models/user');
 var authenticate = require('../authenticate');
 
+const cors = require('./cors');
+
 routerUser.use(bodyParser.json());
 
 routerUser.route('/signup')
-  .post((req, res, next) => {
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .post(cors.corsWithOptions, (req, res, next) => {
     User.register(new User({ username: req.body.username }),
       req.body.password, (err, user) => {
         if (err) {
@@ -40,6 +45,9 @@ routerUser.route('/signup')
   });
 
 routerUser.route('/login')
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
   .post(passport.authenticate('local'), (req, res) => {
 
     var token = authenticate.getToken({ _id: req.user._id });
@@ -49,7 +57,10 @@ routerUser.route('/login')
   });
 
 routerUser.route('/')
-  .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .get(cors.cors, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     User.find({}, function (err, users) {
       var userMap = {};
 
